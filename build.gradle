@@ -1,66 +1,46 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-plugins {
-    id 'java-library'
-    id 'maven-publish'
-}
+subprojects {
+    group 'me.saiintbrisson.minecraft'
+    version '2.4.3'
 
-group 'me.saiintbrisson.minecraft'
-version '2.4.3'
+    apply plugin: 'java-library'
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
-dependencies {
-    compileOnly libs.spigot.api
-    compileOnlyApi libs.jetbrains.annotations
-    testCompileOnly libs.jetbrains.annotations
-    testImplementation libs.junit.api
-    testRuntimeOnly libs.junit.engine
-    testImplementation libs.spigot.api
-}
-
-test {
-    useJUnitPlatform()
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        duplicatesStrategy DuplicatesStrategy.INCLUDE
-        filter ReplaceTokens, tokens: [version: version]
+    repositories {
+        mavenCentral()
+        maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+        maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
-}
 
-java {
-    withSourcesJar()
-    withJavadocJar()
+    dependencies {
+        compileOnly libs.spigot.api
+        compileOnlyApi libs.jetbrains.annotations
+        testCompileOnly libs.jetbrains.annotations
+        testImplementation libs.junit.api
+        testRuntimeOnly libs.junit.engine
+        testImplementation libs.spigot.api
+    }
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
+    test {
+        useJUnitPlatform()
+    }
 
-javadoc {
-    exclude 'me/matsubara/**'
-    exclude 'me/saiintbrisson/minecraft/utils/**'
-}
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 
-project.afterEvaluate {
-    publishing {
-        publications {
-            jitpack(MavenPublication) {
-                groupId = 'com.github.DevNatan'
-                artifactId = 'inventory-framework'
-
-                from components.java
-            }
+    processResources {
+        from(sourceSets.main.resources.srcDirs) {
+            duplicatesStrategy DuplicatesStrategy.INCLUDE
+            filter ReplaceTokens, tokens: [version: version]
         }
+    }
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
